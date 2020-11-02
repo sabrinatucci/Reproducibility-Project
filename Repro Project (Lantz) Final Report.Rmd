@@ -7,9 +7,7 @@ bibliography: scholar.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## NOT FINISHED
-11/1 Update:
-- Had problems with GitHub. It turns out I had 2 folders for the project, and my github repository was linked to the the folder within my project folder. I had to 
+## NOT FINISHED: See README file for update 
 
 
 ## Project Goal
