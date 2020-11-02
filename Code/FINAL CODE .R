@@ -8,7 +8,7 @@ rm(list=ls())
 obs2013<-read.csv("2013 groups.csv", TRUE)
 str(obs2013)
 
-#install.packages("reshape2")
+install.packages("reshape2")
 library(reshape2)
 
 birds2013 = data.frame(obs2013$Group, obs2013$SP, obs2013$Fire,

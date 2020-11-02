@@ -1,0 +1,49 @@
+---
+title: "Repro Project (Lantz) Final Report"
+output: pdf_document
+bibliography: scholar.bib 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## NOT FINISHED
+11/1 Update:
+- Had problems with GitHub. It turns out I had 2 folders for the project, and my github repository was linked to the the folder within my project folder. I had to 
+
+
+## Project Goal
+My goal for this project was to recreate the social network figure (Figure 2) from Lantz & Karubian (2017) paper titled "Environmental Disturbance increases social connectivity in a passerine bird". I chose this paper because I have always been curious as to how social networks are created in ecological studies.I had previously wanted to create social networks in Dr. Karbubians Experimental Animal Behavior class using data on african painted dogs at the zoo, but we decided it would be too complicated for that specific project. 
+
+## Data and Code Availibility 
+After having a really hard time finding papers with published data, I decided to search for articles by Dr. Karubian because a lot of his work focuses on birds (which is my favorite study taxon) and I am familiar with his study systems. I found this paper using Howard Tilton Library databases. The data was published with the paper on the PLOS One database, but the code was not provided.   
+
+## Data Analysis and Coding 
+The data was availible in a .csv file, which was downloaded from PLOS one and directly imported to R studio. Lantz & Karubian (2017) used r packages igraph, sna and asnipe create the social network figure. The code itself was not availible, so I reached out to the corresponding author Samantha Lantz via email, which was availible on the PLOS one website. She replied quickly with the r-script code attached, noting that she could no longer get it to work on her computer. 
+
+
+I had incorrectly assumed that many functions used in the code were out-dated (e.g."melt"), so I spent much of my time researching igraph and how to produce a social networks using alternative functions. With little success, I was close to giving up when Caz encouraged me to try running the original code again. The main problem with the original code was how the working directory was set:
+```{r}
+####setwd####
+setwd("C:/Users/Samantha/Dropbox/Lantz thesis chapters/short-term fire response/data and R code/social networks/R")
+```
+I changed the code to correspond to my working directory: 
+```{r}
+####setwd####
+setwd("/Users/Sabrina/Desktop/4+1 Stuff/Data Tools/Repro Project/Data")
+```
+In order to make this code more reproducible, I removed this line of code all together because the datasets are read independently into data.frames later: 
+```{r}
+obs2013<-read.csv("2013 groups.csv", TRUE)
+obs2014<-read.csv("2014 groups.csv", header=TRUE)
+```
+
+I moved the code that installs packages to the beginning to make it quicker to re-run. 
+
+## Social Networks
+Throughout this process, I have learned a lot about social network analysis and the R package igraph. Social networks are defined by the nodes and edges within a network (e.g. a population, community, ecosystem). In Lantz & Karibian (2017) analysis, each node represents a color-banded individual, and they are connected by edges or relationships between the individuals. Relationships were quantified based on the proportion of time two birds were seen or captured together, and the strength of their association is represented in length and width of the connecting line. 
+
+## Conclusion
+Finding a paper with published data that used social network analyses was harder than expected. I ended up searching for Karubian papers because I am familiar with his research methods and know that he emphasizes reproducibility and accessibility in scientific literature. Without this information, finding a suitable paper would have taken much longer. Moreover, in my literature search for papers that use social networks, I was unable to find a single one that had published code.
+
+## References 
