@@ -1,14 +1,14 @@
 # Final Code for Repro Project
 
 ####setwd####
-setwd("~/Desktop/4+1 Stuff/Data Tools/Repro Project/Data ")
+#setwd("~/Desktop/4+1 Stuff/Data Tools/Repro Project/Data ")
 rm(list=ls())
 
 ####2013####
-obs2013<-read.csv("2013 groups.csv", TRUE)
+obs2013<-read.csv("Data/2013 groups.csv", TRUE)
 str(obs2013)
 
-install.packages("reshape2")
+#install.packages("reshape2")
 library(reshape2)
 
 birds2013 = data.frame(obs2013$Group, obs2013$SP, obs2013$Fire,
@@ -157,7 +157,7 @@ str(post.notaffected.deg_weighted)
 sd(post.notaffected.deg_weighted)
 
 ####2014####
-obs2014<-read.csv("2014 groups.csv", header=TRUE)
+obs2014<-read.csv("Data/2014 groups.csv", header=TRUE)
 str(obs2014)
 
 #####including all birds####
@@ -251,7 +251,7 @@ pre2014.net=as.matrix(pre2014.network)
 pre2014.net
 g.pre2014=graph_from_adjacency_matrix(pre2014.net, mode="undirected", weighted=T)
 g.pre2014
-plot(g.pre2014, vertex.label="", edge.width=E(g.pre2014)$weight)
+plot(g.pre2014, vertex.label="", edge.width=E(g.pre2014)$weight) #CREATING IGRAPH PLOT
 
 post2014.net=as.matrix(post2014.network)
 post2014.net
@@ -268,7 +268,7 @@ plot(g.post2014, vertex.label="", edge.width=E(g.post2014)$weight)
 #plot(g.pre2014, vertex.label="", edge.width=E(g)$weight, xlab="Pre-fire", ylab="Affected by 2014 fire", vertex.color="black", edge.color="black")#pre 2014
 #plot(g.post2014, vertex.label="", edge.width=E(g)$weight, xlab="Post-fire", vertex.color="black", edge.color="black")#post 2014
 
-pdf(file="Fig2.pdf", width=5,height=5) #opens tiff graphic device 
+pdf(file="Figure/Fig2.pdf", width=5,height=5) #opens tiff graphic device 
 
 par(mfrow=c(3,2), mar=c(1,1.3,0.5,0), xpd=NA)
 
