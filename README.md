@@ -1,13 +1,10 @@
 Reproducibility Project Progress
 
 ## 11/1 UPDATE
-- Working on final report and trying to replace the "setwd" function because it makes the code non-reproducible. While working on this, the code 
-- Had problems with GitHub. It turns out I had 2 folders for the project, and my github repository was linked to the the folder within another folder. I had to do a lot of file rearranging, and now I'm getting an error that says "Your branch is ahead of origin/main by 1 commit". I tried pulling everything to the local repository before pushing it as well as "git push" and "git pull" but kept getting different errors, like "Updates were rejected because the remote contains work that you do not have locally. This is usually caused by another repository pushing to the same ref. 
-When I do "git push" i get: Updates were rejected because the remote contains work that you do not have locally. This is usually caused by another repository pushing
-hint: to the same ref. You may want to first integrate the remote changes
-hint: (e.g., 'git pull ...') before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-You may want to first integrate the remote changes (e.g., 'git pull ...') before pushing again." I gave up after a couple of hours working with R.  It would be helpful if I could work with a classmate who is 
+- Working on final report and trying to replace the "setwd" function because it makes the code non-reproducible. While working on this, the code stopped working and I spent a couple of hours trouble shooting. It turned out "reshape2" needed to be updated. I am still working on my final report. 
+- Had problems with GitHub. It turns out I had 2 folders for the project, and my github repository was linked to the the folder within another folder. I had to do a lot of file rearranging, and then got an error that says "Your branch is ahead of origin/main by 1 commit". I tried pulling everything to the local repository before pushing it but kept getting different errors. When I do "git push" I get: Updates were rejected because the remote contains work that you do not have locally. This is usually caused by another repository pushing to the same ref. You may want to first integrate the remote changes (e.g., 'git pull ...') before pushing again." I eventually was able to get evertything to work by using "git push -f" which force merged the repositories. 
+
+
 
 ## UPDATE 10/25: FIGURE REPRODUCED SUCCESSFULLY 
 
