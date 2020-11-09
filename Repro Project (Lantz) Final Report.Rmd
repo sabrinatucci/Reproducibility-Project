@@ -1,14 +1,12 @@
 ---
 title: "Repro Project (Lantz) Final Report"
 output: pdf_document
-bibliography: scholar.bib 
+bibliography: lantzkarubian.bibtex 
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+ knitr::opts_chunk$set(eval = FALSE)
 ```
-## NOT FINISHED: See README file for update 
-
 
 ## Project Goal
 My goal for this project was to recreate the social network figure (Figure 2) from Lantz & Karubian (2017) paper titled "Environmental Disturbance increases social connectivity in a passerine bird". I chose this paper because I have always been curious as to how social networks are created in ecological studies.I had previously wanted to create social networks in Dr. Karbubians Experimental Animal Behavior class using data on african painted dogs at the zoo, but we decided it would be too complicated for that specific project. 
@@ -19,29 +17,92 @@ After having a really hard time finding papers with published data, I decided to
 ## Data Analysis and Coding 
 The data was availible in a .csv file, which was downloaded from PLOS one and directly imported to R studio. Lantz & Karubian (2017) used r packages igraph, sna and asnipe create the social network figure. The code itself was not availible, so I reached out to the corresponding author Samantha Lantz via email, which was availible on the PLOS one website. She replied quickly with the r-script code attached, noting that she could no longer get it to work on her computer. 
 
-
-I had incorrectly assumed that many functions used in the code were out-dated (e.g."melt"), so I spent much of my time researching igraph and how to produce a social networks using alternative functions. With little success, I was close to giving up when Caz encouraged me to try running the original code again. The main problem with the original code was how the working directory was set:
+The main problem with the original code was how the working directory was set:
 ```{r}
 ####setwd####
 setwd("C:/Users/Samantha/Dropbox/Lantz thesis chapters/short-term fire response/data and R code/social networks/R")
 ```
-I changed the code to correspond to my working directory: 
+Calling files from a local source makes the code non-reproducible, so I commented the above line out. Instead, I called the individual datasets in using the github pathway for both 2013 and 2014: 
 ```{r}
-####setwd####
-setwd("/Users/Sabrina/Desktop/4+1 Stuff/Data Tools/Repro Project/Data")
-```
-In order to make this code more reproducible, I removed this line of code all together because the datasets are read independently into data.frames later: 
-```{r}
-obs2013<-read.csv("2013 groups.csv", TRUE)
-obs2014<-read.csv("2014 groups.csv", header=TRUE)
-```
+####2013####
+obs2013<-read.csv("Data/2013 groups.csv", TRUE)
 
-I moved the code that installs packages to the beginning to make it quicker to re-run. 
+####2014####
+obs2014<-read.csv("Data/2014 groups.csv", header=TRUE)
+```
+After this change, the code ran without any other alterations.
 
 ## Social Networks
-Throughout this process, I have learned a lot about social network analysis and the R package igraph. Social networks are defined by the nodes and edges within a network (e.g. a population, community, ecosystem). In Lantz & Karibian (2017) analysis, each node represents a color-banded individual, and they are connected by edges or relationships between the individuals. Relationships were quantified based on the proportion of time two birds were seen or captured together, and the strength of their association is represented in length and width of the connecting line. 
+Throughout this process, I have learned a lot about social network analysis and the R package igraph. Social networks are defined by the nodes and edges within a network (e.g. a population, community, ecosystem). In Lantz & Karubian (2017) analysis, each node represents a color-banded individual, and they are connected by edges or relationships between the individuals. Relationships were quantified based on the proportion of time two birds were seen or captured together, and the strength of their association is represented in length and width of the connecting line. 
+
+## iGraph, asnipe, reshape2 and sna 
+#iGraph
+-iGraph was used to plot the social networks.
+- Setting parameters, creating matrices for pre/post affected and pre/post non affected for 2013 and 2014
+  -"as.matrix"" turns the arguments of pre affected network into a matrix
+-"graph_from_adjacency_matrix" creates igraph graph from adjacency matrix, weighted=T means the name of the edge attribute will be weight
+-"E" is an edge sequence vetor with numeric edge ids weighted by the degree of association 
+```{r}
+##IGRAPH plotting social networks 
+pre.aff.net=as.matrix(pre.affected.network) 
+g.pre.aff2013=graph_from_adjacency_matrix(pre.aff.net, mode="undirected", weighted=T) 
+plot(g.pre.aff2013, vertex.label="", edge.width=E(g.pre.aff2013)$weight)
+```
+-PDF starts the graphics device driver for producing social network graphic
+```{r}
+pdf(file="Figure/Fig2.pdf", width=5,height=5) 
+```
+-"par" sets graphical parameters with "mfrow" specifying a vector to be drawn into a 3x2 array on the device by rows (mfcol would be columns)
+-"mar"" sets the margins and "xpd=NA" clips all plotting to the device  
+```{r}
+par(mfrow=c(3,2), mar=c(1,1.3,0.5,0), xpd=NA)
+```
+-Creating plot, ylab= y label, and specifying colors
+-Repeated for post & pre2013 and post & pre2014
+```{r}
+title(ylab="Not affected by 2013 fire", line=0, cex.lab=1.2)
+plot(g.post.notaff2013, vertex.label="", edge.width=E(g.post.notaff2013)$weight, vertex.color="black", edge.color="black")
+dev.off()
+```
+-"dev.off" shuts down the current graphical device 
+
+#reshape2
+-Using melt on dataframe to reshape it from wide to long (like pivot.longer) e.g. making a new row for each bird combination
+Make a new row for each bird combo
+-Specifying variables 1 to 3 are the id variables
+```{r}
+birdmelt = melt(birds2013, id.vars= 1:3) 
+```
+-This command gets rid of zeros 
+```{r}
+birdmelt<-birdmelt[!(birdmelt$value == ""), ]
+```
+-This line gives us a list of each individual and the groups it is associated with, as well as the sampling period
+colnames(individuals) <- c("ID","Group","SP", "Fire")
+head(individuals)
+
+#asnipe
+-"get_group_by" converts several different types of data storage into a group by individual matrix for calculating or changing the order of networks
+```{r}
+pre.affected.gbi <- get_group_by_individual(prefire.affected, 
+                                   data_format="individuals")
+```
+-"get_network" calculates a network from a group_by_individual matrix, "gbi" gives a group_by_matrix
+```{r}
+pre.affected.network<-get_network(pre.affected.gbi, data_format="GBI")
+```
+#sna package 
+-Used for command degree
+-"degree"" takes pre.affected.network graph a returns the weighted degree
+-"gmode" is a string indicating the type of graph being evaluated. 
+-"graph" indicates that edges are undirected because      Lantz & Karubian did not measure which individual initiated contact 
+-When ignore.eval==FALSE, degree weights edges by their values (e.g. they are weight not unweighted)
+```{r}
+pre.affected.deg_weighted <- degree
+  (pre.affected.network,gmode="graph", g=c(1,2), ignore.eval=FALSE)
+```
 
 ## Conclusion
-Finding a paper with published data that used social network analyses was harder than expected. I ended up searching for Karubian papers because I am familiar with his research methods and know that he emphasizes reproducibility and accessibility in scientific literature. Without this information, finding a suitable paper would have taken much longer. Moreover, in my literature search for papers that use social networks, I was unable to find a single one that had published code.
+Finding a paper with published data that used social network analyses was harder than expected. I ended up searching for Karubian papers because I am familiar with his research methods and know that he emphasizes reproducibility and accessibility in scientific literature. Without this information, finding a suitable paper would have taken much longer. Overall, reproducing this paper was much easier than I had anticipated due to a responsive corresponding author. The code was also able to run with barely any alterations, indication that this research paper is in fact reproducible. 
 
-## References 
+# References 
